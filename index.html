@@ -139,12 +139,16 @@
         .marquee-text {
             display: inline-block;
             padding-left: 100%;
-            animation: scroll-left 15s linear infinite;
+            animation: scroll-left 20s linear infinite;
             font-size: 20vh;
             font-weight: bold;
             color: #ff0;
             transition: color 0.3s;
             line-height: 1;
+        }
+
+        .display-section.fullscreen .marquee-text {
+            font-size: 35vh;
         }
 
         @keyframes scroll-left {
@@ -309,7 +313,7 @@
             
             // 애니메이션 속도 적용
             const marqueeText = container.querySelector('.marquee-text');
-            marqueeText.style.animation = `scroll-left 15s linear infinite`;
+            marqueeText.style.animation = `scroll-left 20s linear infinite`;
 
             // 전체화면 모드로 전환
             enterFullscreenMode();
