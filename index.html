@@ -251,7 +251,6 @@
         .marquee-text {
             display: inline-block;
             padding-left: 100%;
-            animation: scroll-left 25s linear infinite;
             font-size: 50vh;
             font-weight: bold;
             color: #ff0;
@@ -268,11 +267,11 @@
         }
 
         @keyframes scroll-left {
-            0% {
+            from {
                 transform: translateX(0);
             }
-            100% {
-                transform: translateX(-50%);
+            to {
+                transform: translateX(-100vw);
             }
         }
 
@@ -395,12 +394,13 @@
             // 배경색 변경
             document.getElementById('displaySection').style.backgroundColor = bgColor;
             
-            // 텍스트를 두 번 반복 (무한 스크롤을 위해)
-            const repeatedText = text + '   ' + text + '   ';
+            // 텍스트를 여러 번 반복
+            const repeatedText = (text + '   ').repeat(20);
             
             container.innerHTML = `<div class="marquee-text" style="color: ${textColor};">${repeatedText}</div>`;
             
             // 애니메이션 속도 적용 (속도 값이 높을수록 빠르게)
+            // 항상 100vw를 이동하므로 글자 길이와 무관
             const duration = 30 / speed; // 속도 1 = 30초, 속도 10 = 3초
             const marqueeText = container.querySelector('.marquee-text');
             marqueeText.style.animation = `scroll-left ${duration}s linear infinite`;
