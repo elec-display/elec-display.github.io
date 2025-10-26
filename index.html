@@ -331,16 +331,33 @@
             document.getElementById('speedControl').classList.add('hidden');
             
             // 전광판 전체화면
-            document.getElementById('displaySection').classList.add('fullscreen');
+            const displaySection = document.getElementById('displaySection');
+            displaySection.classList.add('fullscreen');
             
             // 취소 버튼 표시
             document.getElementById('cancelButton').classList.add('visible');
 
-            // 화면 가로 고정 시도
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(err => {
-                    console.log('화면 회전 고정 실패:', err);
+            // 브라우저 전체화면 API 호출
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => {
+                    console.log('전체화면 전환 실패:', err);
                 });
+            } else if (elem.webkitRequestFullscreen) { // Safari
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE11
+                elem.msRequestFullscreen();
+            }
+
+            // 화면 가로 고정 시도 (샌드박스 환경에서는 작동 안 함)
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch(err => {
+                        // 에러 무시 (샌드박스 환경)
+                    });
+                }
+            } catch (err) {
+                // 에러 무시
             }
         }
 
@@ -355,9 +372,24 @@
             // 취소 버튼 숨기기
             document.getElementById('cancelButton').classList.remove('visible');
 
+            // 전체화면 해제
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { // Safari
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { // IE11
+                    document.msExitFullscreen();
+                }
+            }
+
             // 화면 회전 고정 해제
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
+            try {
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            } catch (err) {
+                // 에러 무시
             }
         }
 
