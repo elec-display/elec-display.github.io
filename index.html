@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전광판</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Black', sans-serif;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-section {
+            background: #1a1a1a;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 2px solid #333;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #textInput {
+            flex: 1;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #444;
+            background: #2a2a2a;
+            color: #fff;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        #textInput:focus {
+            border-color: #ff0;
+        }
+
+        .color-picker-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #2a2a2a;
+            padding: 8px 12px;
+            border-radius: 5px;
+            border: 2px solid #444;
+        }
+
+        .color-picker-group label {
+            color: #fff;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .color-picker-group input[type="color"] {
+            width: 40px;
+            height: 35px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .color-picker-group input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker-group input[type="color"]::-webkit-color-swatch {
+            border: 2px solid #666;
+            border-radius: 3px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            background: #ff0;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #ffd700;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .display-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 15s linear infinite;
+            font-size: 10vw;
+            font-weight: bold;
+            color: #ff0;
+            transition: color 0.3s;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .speed-control {
+            background: #1a1a1a;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 2px solid #333;
+        }
+
+        .speed-control label {
+            color: #fff;
+            font-size: 14px;
+        }
+
+        #speedSlider {
+            flex: 1;
+            height: 5px;
+            border-radius: 5px;
+            outline: none;
+            background: #444;
+        }
+
+        #speedSlider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff0;
+            cursor: pointer;
+        }
+
+        #speedSlider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff0;
+            cursor: pointer;
+            border: none;
+        }
+
+        .placeholder {
+            font-size: 6vw;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .input-row {
+                flex-wrap: wrap;
+            }
+            
+            .color-picker-group {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="input-section">
+        <div class="input-row">
+            <input type="text" id="textInput" placeholder="전광판에 표시할 텍스트를 입력하세요..." maxlength="100">
+        </div>
+        <div class="input-row">
+            <div class="color-picker-group">
+                <label for="textColor">글자색</label>
+                <input type="color" id="textColor" value="#ffff00">
+            </div>
+            <div class="color-picker-group">
+                <label for="bgColor">배경색</label>
+                <input type="color" id="bgColor" value="#000000">
+            </div>
+            <button onclick="updateText()">표시</button>
+        </div>
+    </div>
+
+    <div class="display-section" id="displaySection">
+        <div class="marquee-container" id="marqueeContainer">
+            <div class="placeholder">↑ 텍스트를 입력하고 '표시'를 눌러주세요</div>
+        </div>
+    </div>
+
+    <div class="speed-control">
+        <label for="speedSlider">속도:</label>
+        <input type="range" id="speedSlider" min="5" max="30" value="15" step="1">
+        <span id="speedValue" style="color: #ff0; font-weight: bold; min-width: 30px;">15s</span>
+    </div>
+
+    <script>
+        let currentText = '';
+
+        function updateText() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+            
+            if (text === '') {
+                alert('텍스트를 입력해주세요!');
+                return;
+            }
+
+            currentText = text;
+            const container = document.getElementById('marqueeContainer');
+            const textColor = document.getElementById('textColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+            
+            // 배경색 변경
+            document.getElementById('displaySection').style.backgroundColor = bgColor;
+            
+            // 텍스트를 여러 번 반복
+            const repeatedText = (text + ' ').repeat(10);
+            
+            container.innerHTML = `<div class="marquee-text" style="color: ${textColor};">${repeatedText}</div>`;
+            
+            // 애니메이션 속도 적용
+            const marqueeText = container.querySelector('.marquee-text');
+            const duration = document.getElementById('speedSlider').value;
+            marqueeText.style.animation = `scroll-left ${duration}s linear infinite`;
+        }
+
+        // 색상 변경 시 실시간 반영
+        document.getElementById('textColor').addEventListener('input', function(e) {
+            const marqueeText = document.querySelector('.marquee-text');
+            if (marqueeText) {
+                marqueeText.style.color = e.target.value;
+            }
+        });
+
+        document.getElementById('bgColor').addEventListener('input', function(e) {
+            document.getElementById('displaySection').style.backgroundColor = e.target.value;
+        });
+
+        // 속도 슬라이더
+        document.getElementById('speedSlider').addEventListener('input', function(e) {
+            const speed = e.target.value;
+            document.getElementById('speedValue').textContent = speed + 's';
+            
+            const marqueeText = document.querySelector('.marquee-text');
+            if (marqueeText) {
+                marqueeText.style.animation = `scroll-left ${speed}s linear infinite`;
+            }
+        });
+
+        // 엔터키로도 표시
+        document.getElementById('textInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                updateText();
+            }
+        });
+    </script>
+</body>
+</html>
