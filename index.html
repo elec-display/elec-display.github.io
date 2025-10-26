@@ -140,10 +140,11 @@
             display: inline-block;
             padding-left: 100%;
             animation: scroll-left 15s linear infinite;
-            font-size: 10vw;
+            font-size: 20vh;
             font-weight: bold;
             color: #ff0;
             transition: color 0.3s;
+            line-height: 1;
         }
 
         @keyframes scroll-left {
@@ -156,16 +157,6 @@
         }
 
         .speed-control {
-            background: #1a1a1a;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-top: 2px solid #333;
-            transition: all 0.3s;
-        }
-
-        .speed-control.hidden {
             display: none;
         }
 
@@ -318,8 +309,7 @@
             
             // 애니메이션 속도 적용
             const marqueeText = container.querySelector('.marquee-text');
-            const duration = document.getElementById('speedSlider').value;
-            marqueeText.style.animation = `scroll-left ${duration}s linear infinite`;
+            marqueeText.style.animation = `scroll-left 15s linear infinite`;
 
             // 전체화면 모드로 전환
             enterFullscreenMode();
@@ -328,7 +318,6 @@
         function enterFullscreenMode() {
             // 설정 영역 숨기기
             document.getElementById('inputSection').classList.add('hidden');
-            document.getElementById('speedControl').classList.add('hidden');
             
             // 전광판 전체화면
             const displaySection = document.getElementById('displaySection');
@@ -364,7 +353,6 @@
         function cancelDisplay() {
             // 설정 영역 표시
             document.getElementById('inputSection').classList.remove('hidden');
-            document.getElementById('speedControl').classList.remove('hidden');
             
             // 전광판 일반 모드
             document.getElementById('displaySection').classList.remove('fullscreen');
@@ -403,17 +391,6 @@
 
         document.getElementById('bgColor').addEventListener('input', function(e) {
             document.getElementById('displaySection').style.backgroundColor = e.target.value;
-        });
-
-        // 속도 슬라이더
-        document.getElementById('speedSlider').addEventListener('input', function(e) {
-            const speed = e.target.value;
-            document.getElementById('speedValue').textContent = speed + 's';
-            
-            const marqueeText = document.querySelector('.marquee-text');
-            if (marqueeText) {
-                marqueeText.style.animation = `scroll-left ${speed}s linear infinite`;
-            }
         });
 
         // 엔터키로도 표시
