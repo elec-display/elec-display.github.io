@@ -220,7 +220,7 @@
                 transform: translateX(0);
             }
             100% {
-                transform: translateX(-100%);
+                transform: translateX(-50%);
             }
         }
 
@@ -337,8 +337,8 @@
             // 배경색 변경
             document.getElementById('displaySection').style.backgroundColor = bgColor;
             
-            // 텍스트를 여러 번 반복
-            const repeatedText = (text + '   ').repeat(10);
+            // 텍스트를 두 번 반복 (무한 스크롤을 위해)
+            const repeatedText = text + '   ' + text + '   ';
             
             container.innerHTML = `<div class="marquee-text" style="color: ${textColor};">${repeatedText}</div>`;
             
