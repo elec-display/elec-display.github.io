@@ -342,9 +342,12 @@
             
             container.innerHTML = `<div class="marquee-text" style="color: ${textColor};">${repeatedText}</div>`;
             
-            // 애니메이션 속도 적용
+            // 애니메이션 속도 계산 (글자 길이에 비례)
             const marqueeText = container.querySelector('.marquee-text');
-            marqueeText.style.animation = `scroll-left 25s linear infinite`;
+            const textLength = text.length;
+            // 글자당 0.5초씩 (원하는 속도로 조절 가능)
+            const duration = Math.max(10, textLength * 0.5);
+            marqueeText.style.animation = `scroll-left ${duration}s linear infinite`;
 
             // 전체화면 모드로 전환
             enterFullscreenMode();
