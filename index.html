@@ -342,11 +342,18 @@
             
             container.innerHTML = `<div class="marquee-text" style="color: ${textColor};">${repeatedText}</div>`;
             
-            // 애니메이션 속도 계산 (글자 길이에 비례)
+            // 픽셀 기반 속도 계산 (글자 길이와 무관)
             const marqueeText = container.querySelector('.marquee-text');
-            const textLength = text.length;
-            // 글자당 0.5초씩 (원하는 속도로 조절 가능)
-            const duration = Math.max(10, textLength * 0.5);
+            
+            // 실제 텍스트 너비 측정
+            const textWidth = marqueeText.offsetWidth;
+            
+            // 초당 이동할 픽셀 (이 값을 조절하면 속도 변경)
+            const pixelsPerSecond = 100;
+            
+            // 텍스트 절반(반복 1회분)을 이동하는데 걸리는 시간 계산
+            const duration = (textWidth / 2) / pixelsPerSecond;
+            
             marqueeText.style.animation = `scroll-left ${duration}s linear infinite`;
 
             // 전체화면 모드로 전환
